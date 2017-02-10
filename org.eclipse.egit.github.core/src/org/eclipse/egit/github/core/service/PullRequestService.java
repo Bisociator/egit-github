@@ -397,6 +397,17 @@ public class PullRequestService extends GitHubService {
 	}
 
 	/**
+	 * Get all comments on commits in given pull request
+	 *
+	 * @param repository
+	 * @return non-null list of comments
+	 * @throws IOException
+	 */
+	public List<CommitComment> getComments(IRepositoryIdProvider repository) throws IOException {
+		return getAll(pageComments(repository, -1));
+	}
+
+	/**
 	 * Page pull request commit comments
 	 *
 	 * @param repository
@@ -436,7 +447,9 @@ public class PullRequestService extends GitHubService {
 		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(repoId);
 		uri.append(SEGMENT_PULLS);
-		uri.append('/').append(id);
+		if(id != -1) {
+			uri.append('/').append(id);
+		}
 		uri.append(SEGMENT_COMMENTS);
 		PagedRequest<CommitComment> request = createPagedRequest(start, size);
 		request.setUri(uri);

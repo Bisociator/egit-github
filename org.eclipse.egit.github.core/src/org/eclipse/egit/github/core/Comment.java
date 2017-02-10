@@ -166,4 +166,19 @@ public class Comment implements Serializable {
 		this.user = user;
 		return this;
 	}
+
+	@Override
+	public String toString() {
+		final StringBuffer sb = new StringBuffer("Comment{");
+		sb.append("createdAt=").append(createdAt);
+		sb.append(", updatedAt=").append(updatedAt);
+		sb.append(", body='").append(body).append('\'');
+		sb.append(", bodyHtml='").append(bodyHtml).append('\'');
+		sb.append(", bodyText='").append(bodyText).append('\'');
+		sb.append(", id=").append(id);
+		sb.append(", url='").append(url).append('\'');
+		sb.append(", user=").append(user);
+		sb.append('}');
+		return sb.toString();
+	}
 }

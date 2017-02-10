@@ -486,4 +486,13 @@ public class User implements Serializable {
 		this.plan = plan;
 		return this;
 	}
+
+	@Override
+	public String toString() {
+		final StringBuffer sb = new StringBuffer("User{");
+		sb.append("id=").append(id);
+		sb.append(", login='").append(login).append('\'');
+		sb.append('}');
+		return sb.toString();
+	}
 }

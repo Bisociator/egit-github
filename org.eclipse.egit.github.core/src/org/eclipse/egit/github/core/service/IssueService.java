@@ -10,17 +10,12 @@
  *******************************************************************************/
 package org.eclipse.egit.github.core.service;
 
-import static org.eclipse.egit.github.core.client.IGitHubConstants.CHARSET_UTF8;
-import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_COMMENTS;
-import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_EVENTS;
-import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_ISSUES;
-import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_LEGACY;
-import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_REPOS;
-import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_SEARCH;
-import static org.eclipse.egit.github.core.client.PagedRequest.PAGE_FIRST;
-import static org.eclipse.egit.github.core.client.PagedRequest.PAGE_SIZE;
-
 import com.google.gson.reflect.TypeToken;
+import org.eclipse.egit.github.core.*;
+import org.eclipse.egit.github.core.client.GitHubClient;
+import org.eclipse.egit.github.core.client.GitHubRequest;
+import org.eclipse.egit.github.core.client.PageIterator;
+import org.eclipse.egit.github.core.client.PagedRequest;
 
 import java.io.IOException;
 import java.net.URLEncoder;
@@ -29,20 +24,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.egit.github.core.Comment;
-import org.eclipse.egit.github.core.IRepositoryIdProvider;
-import org.eclipse.egit.github.core.IResourceProvider;
-import org.eclipse.egit.github.core.Issue;
-import org.eclipse.egit.github.core.IssueEvent;
-import org.eclipse.egit.github.core.Label;
-import org.eclipse.egit.github.core.Milestone;
-import org.eclipse.egit.github.core.RepositoryIssue;
-import org.eclipse.egit.github.core.SearchIssue;
-import org.eclipse.egit.github.core.User;
-import org.eclipse.egit.github.core.client.GitHubClient;
-import org.eclipse.egit.github.core.client.GitHubRequest;
-import org.eclipse.egit.github.core.client.PageIterator;
-import org.eclipse.egit.github.core.client.PagedRequest;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.*;
+import static org.eclipse.egit.github.core.client.PagedRequest.PAGE_FIRST;
+import static org.eclipse.egit.github.core.client.PagedRequest.PAGE_SIZE;
 
 /**
  * Issue service class for listing, searching, and fetching {@link Issue}
@@ -396,21 +380,35 @@ public class IssueService extends GitHubService {
 	 * Get an issue's comments
 	 *
 	 * @param repository
+	 * @return list of comments
+	 * @throws IOException
+	 */
+	public List<Comment> getComments(IRepositoryIdProvider repository) throws IOException {
+		String repoId = getId(repository);
+		return getComments(repoId, null);
+	}
+
+	/**
+	 * Get an issue's comments
+	 *
+	 * @param repoId
 	 * @param issueNumber
 	 * @return list of comments
 	 * @throws IOException
 	 */
 	private List<Comment> getComments(String repoId, String issueNumber)
 			throws IOException {
-		if (issueNumber == null)
-			throw new IllegalArgumentException("Issue number cannot be null"); //$NON-NLS-1$
-		if (issueNumber.length() == 0)
-			throw new IllegalArgumentException("Issue number cannot be empty"); //$NON-NLS-1$
+//		if (issueNumber == null)
+//			throw new IllegalArgumentException("Issue number cannot be null"); //$NON-NLS-1$
+//		if (issueNumber.length() == 0)
+//			throw new IllegalArgumentException("Issue number cannot be empty"); //$NON-NLS-1$
 
 		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(repoId);
 		uri.append(SEGMENT_ISSUES);
-		uri.append('/').append(issueNumber);
+		if(issueNumber !=null) {
+			uri.append('/').append(issueNumber);
+		}
 		uri.append(SEGMENT_COMMENTS);
 		PagedRequest<Comment> request = createPagedRequest();
 		request.setUri(uri);
